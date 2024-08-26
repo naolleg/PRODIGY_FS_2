@@ -26,7 +26,7 @@ function AdminDashboard() {
         item.firstName.toLowerCase().includes(searchTerm) ||
         item.lastName.toLowerCase().includes(searchTerm) ||
         item.email.toLowerCase().includes(searchTerm) ||
-        item.departmentId.toString().includes(searchTerm) || // assuming departmentId is a number
+        item.employees.map((employee: any) => employee.department.name).join(', ').toLowerCase().includes(searchTerm) || // assuming departmentId is a number
         item.activeStatus.toLowerCase().includes(searchTerm)
       );
     });
@@ -48,7 +48,7 @@ function AdminDashboard() {
       <div className="flex flex-col h-screen" style={{ fontFamily: 'Arial, sans-serif' }}>
         <Header />
         <div className="flex-1 p-4">
-          <div className="flex justify-normal mb-4">
+          <div className="flex justify-normal mb-4 justify-between">
             <h1 className="text-3xl font-bold mr-10 text-gray-600">Admin Dashboard</h1>
             <input
               type="search"
@@ -58,7 +58,7 @@ function AdminDashboard() {
               className="px-4 py-2 border border-gray-300 rounded"
             />
             <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow"
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow "
               onClick={() => window.location.href = '/dashboard/newEmployee'}
             >
               Add employee
@@ -77,13 +77,24 @@ function AdminDashboard() {
               </thead>
               <tbody className="text-sm divide-y divide-gray-100">
               {filteredData.length > 0 ? filteredData.map((item: any) => (
-
                   <tr key={item.id} className="hover:bg-gray-100">
-                    {columns.map((column) => (
-                      <td key={column.accessor} className="p-2 whitespace-nowrap">
-                        <div className="text-left">{item[column.accessor]}</div>
-                      </td>
-                    ))}
+                    {columns.map((column) => {
+                      if (column.accessor === 'departmentId') {
+                        return (
+                          <td key={column.accessor} className="p-2 whitespace-nowrap">
+                            <div className="text-left">
+                              {item.employees.map((employee: any) => employee.department.name).join(', ')}
+                            </div>
+                          </td>
+                        );
+                      } else {
+                        return (
+                          <td key={column.accessor} className="p-2 whitespace-nowrap">
+                            <div className="text-left">{item[column.accessor]}</div>
+                          </td>
+                        );
+                      }
+                    })}
                   </tr>
                 )) : (
                   <tr>

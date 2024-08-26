@@ -16,34 +16,53 @@ const userController = {
     },
   });
   if (isUserExist) {
-    return res.status(404).json({
+    return res.status(409).json({
       success: false,
       message: "Email is already in use",
     });
   }
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(req.body.password, salt);
-
-  const newUser = await prisma.user.create({
-    data: {
-
-      email: req.body.email,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      gender:req.body.gender,
-      passwordHash: hashedPassword,
-      activeStatus: STATUS.ACTIVE,
-      phoneNumber: req.body.phoneNumber,
-      departmentId:req.body.departmentId
-      
-    },
-  });
-
-  return res.status(200).json({
-    success: true,
-    message: "User created successfully",
-    data: newUser,
-  });
+  
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.passwordHash, salt);
+  
+    const newEmployee = await prisma.user.create({
+      data: {
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        passwordHash: hashedPassword,
+        activeStatus: STATUS.ACTIVE,
+        employees: {
+          create: {
+            deptId: req.body.departmentId,
+            jobTitle: req.body.jobTitle,
+            imageUrl: req.body.imageUrl,
+            gender: req.body.gender,
+            address: {
+              create: {
+                subcity: req.body.subcity,
+                city: req.body.city,
+                houseNumber: req.body.houseNumber,
+              },
+            },
+          },
+        },
+      },
+    });
+  
+    return res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      data: newEmployee,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Error creating user",
+    });
+  }
 },
   
 
@@ -196,22 +215,42 @@ const userController = {
         message: "user not found",
       });
     }
-    const updateUser = await prisma.user.update({
-      where: {
-        id: +id,
-      },
-      data: {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        gender:req.body.gender,
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "user info updated successfully",
-      data: updateUser,
-    });
+    // const updateUser = await prisma.user.update({
+    //   where: {
+    //     id: +id,
+    //   },
+    //   data: {
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName,
+    //     employees: {
+    //       update: {
+    //         jobTitle: req.body.jobTitle,
+    //         imageUrl: req.body.imageUrl,
+    //         gender: req.body.gender,
+    //         address: {
+    //           upsert: {
+    //             create: {
+    //               subcity: req.body.subcity,
+    //               city: req.body.city,
+    //               houseNumber: req.body.houseNumber
+    //             },
+    //             update: {
+    //               subcity: req.body.subcity,
+    //               city: req.body.city,
+    //               houseNumber: req.body.houseNumber
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   },
+    // });
+    
+    // return res.status(200).json({
+    //   success: true,
+    //   message: "user info updated successfully",
+    //   data: updateUser,
+    // });
   },
   changeStatus: async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
@@ -244,7 +283,21 @@ const userController = {
   getAll:async(req: Request,res: Response,next: NextFunction)=>{
 
     try {
-        const users= await prisma.user.findMany()
+        const users= await prisma.user.findMany(
+          {
+            include: {
+              employees: {
+                include: {
+                  department: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        
         res.status(200).json({ success: true,
           message: "all Users",users});
       } catch (error) {

@@ -58,7 +58,7 @@ model Employee {
   deptId    Int
   jobTitle  String
   gender    GENDER
-  imageUrl  String
+  imageUrl  String?
   address   Address[]
   department Department @relation(fields: [deptId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
