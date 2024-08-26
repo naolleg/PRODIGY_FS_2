@@ -17,16 +17,19 @@ enum Role {
   ADMIN
   EMPLOYEE
 }
-enum STATUS{
+
+enum STATUS {
   ACTIVE
   DEACTIVATED
   PENDING
 }
+
 enum LeaveStatus {
   PENDING
   APPROVED
   REJECTED
 }
+
 enum GENDER {
   MALE
   FEMALE
@@ -37,32 +40,56 @@ model User {
   firstName      String
   lastName       String
   email          String         @unique
-  phoneNumber    String?
-  address        String?
-  gender     GENDER
-  role           Role@default(EMPLOYEE)
-  profilePicture String?
   passwordHash   String
-  activeStatus STATUS @default(ACTIVE)
-  otp String?
-  otpCreatedAt DateTime? @default(now())
-  otpExpiry DateTime? @default(now()) 
-  department     Department     @relation(fields: [departmentId], references: [id])
-  departmentId   Int
+  activeStatus   STATUS         @default(ACTIVE)
+  otp            String?
+  otpCreatedAt   DateTime?      @default(now())
+  otpExpiry      DateTime?      @default(now())
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
+  employees  Employee[]
+  manager    Manager?
+  role           Role           @default(EMPLOYEE)
 }
-model Department {
 
+model Employee {
   id        Int     @id @default(autoincrement())
+  userId     Int
+  deptId    Int
+  jobTitle  String
+  gender    GENDER
+  imageUrl  String
+  address   Address[]
+  department Department @relation(fields: [deptId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  LeaveRequest LeaveRequest[]
+}
+
+model Manager {
+  id   Int     @id @default(autoincrement())
+  userId     Int @unique
+  deptId  Int
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  department     Department[]
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Department {
+  id        Int     @id @default(autoincrement())
+  managerId   Int
   name      String  @unique
   type      String
-  createdAt  DateTime       @default(now()) 
-  employees User []
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  manager    Manager @relation(fields: [managerId], references: [id])
+  employees  Employee[]
 }
+
 model LeaveRequest {
   id          Int         @id @default(autoincrement())
   employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
   leaveType   LeaveType   @relation(fields: [leaveTypeId], references: [id])
   leaveTypeId Int
   startDate   DateTime
@@ -79,4 +106,13 @@ model LeaveType {
   maxDays       Int // Max number of days allowed
   status        Boolean // true for active, false for inactive
   leaveRequests LeaveRequest[]
+}
+
+model Address {
+  id     Int     @id @default(autoincrement())
+  employeeId   Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  city   String
+  subcity  String
+  houseNumber  String
 }
