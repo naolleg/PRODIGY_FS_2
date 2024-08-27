@@ -19,7 +19,7 @@ const Navbar = () => {
                     <div className="hidden md:flex space-x-10    ">
                         <a href="/dashboard" className="text-white dark:text-white hover:text-gray-900">Home</a>
                         <a href="/department" className="text-white dark:text-white hover:text-gray-900">dept</a>
-                        <a href="#" className="text-white dark:text-white hover:text-gray-900">empty</a>
+                        <a href="/profile" className="text-white dark:text-white hover:text-gray-900">empty</a>
                         <a href="#" className="text-white dark:text-white hover:text-gray-900">about        </a>
                     </div>
                     <div className="flex items-center">
