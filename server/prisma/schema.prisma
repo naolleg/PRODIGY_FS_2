@@ -67,17 +67,17 @@ model Employee {
 
 model Manager {
   id   Int     @id @default(autoincrement())
-  userId     Int @unique
-  deptId  Int
+  userId     Int? @unique
+  deptId     Int
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   department     Department[]
-  user       User     @relation(fields: [userId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id])
 }
 
 model Department {
   id        Int     @id @default(autoincrement())
-  managerId   Int
+  managerId  Int
   name      String  @unique
   type      String
   createdAt  DateTime       @default(now())

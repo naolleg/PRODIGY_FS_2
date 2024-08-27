@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Register = () => {
@@ -15,8 +15,18 @@ const Register = () => {
   const [subcity, setSubcity] = useState('');
   const [houseNumber, setHouseNumber] = useState('');
   const [error, setError] = useState(null);
+  const [departments, setDepartments] = useState([]); // Add a state to store the departments
 
-  const handleSubmit = (event) => {
+    useEffect(() => {
+      axios.get('http://localhost:7777/api/department/getAll')
+        .then((response) => {
+          setDepartments(response.data.department);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }, []);
+  const handleSubmit = (event:any) => {
     event.preventDefault();
     const userData = {
       email,
@@ -46,6 +56,7 @@ const Register = () => {
   };
 
   return (
+    
     <div className='bg-slate-600 h-screen w-screen p-40 flex justify-center items-center'>
       <div className="container p-8 md:p-16 w-4/5 bg-gray-200 rounded-2xl text-gray-600 shadow-2xl" style={{ fontFamily: 'Arial, sans-serif' }}>
         <h1 className="text-3xl font-bold mb-4">Register</h1>
@@ -109,8 +120,32 @@ const Register = () => {
                 placeholder="hashedpassword123"
               />
             </div>
+            
           </div>
+          
           <div className="flex flex-wrap -mx-3 mb-6">
+            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="departmentId">
+                Department ID <span className="text-red-500">*</span>
+              </label>
+              <select
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="departmentId"
+                value={departmentId}
+                onChange={(event) => setDepartmentId(parseInt(event.target.value))}
+              >
+                {Array.isArray(departments) && departments.length > 0 ? (
+                  departments.map((department) => (
+                    <option key={department.id} value={department.id}>
+                      {department.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">No departments found</option>
+                )}
+              </select>
+            </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="activeStatus">
                 Active Status <span className="text-red-500">*</span>
@@ -126,21 +161,8 @@ const Register = () => {
                 <option value="INACTIVE">INACTIVE</option>
               </select>
             </div>
-            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="departmentId">
-                Department ID <span className="text-red-500">*</span>
-              </label>
-              <input
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                id="departmentId"
-                type="number"
-                value={departmentId}
-                onChange={(event) => setDepartmentId(parseInt(event.target.value))}
-                placeholder="1"
-              />
-            </div>
           </div>
+          
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="jobTitle">
