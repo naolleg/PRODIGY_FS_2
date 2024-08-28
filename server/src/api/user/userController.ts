@@ -210,8 +210,9 @@ const userController = {
           email: email,
         },
         data:{
-   otp:newOtp
+        otp:newOtp
   }});
+
   sendEmail(user.email, newOtp);
   
     return res.status(200).json({
@@ -219,7 +220,40 @@ const userController = {
       message: "Otp send successfully",
 
     });
-  },  changeStatus: async (req: Request, res: Response, next: NextFunction) => {
+  }, 
+  otpVerification: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, otp } = req.body;
+  
+      const users= await prisma.user.findUnique({
+        where: { email },
+      });
+  
+      if (
+        !users ||
+        users.otp !== otp 
+       
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid or expired OTP. Please request a new OTP.",
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "OTP verified successfully.",
+      });
+    } catch (error:any) {
+      console.error("Error in otpVerification:", error);
+      res.status(500).json({
+        success: false,
+        message: "An error occurred while verifying the OTP.",
+        error: error.message,
+      });
+    }
+  },
+  changeStatus: async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const user = await prisma.user.findFirst({
       where: {
@@ -247,6 +281,60 @@ const userController = {
       data: updateUser,
     });
   },
+   newPassword: async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.body.email;
+    const newPassword = req.body.newpassword;
+  
+    if (!email || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+  
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+      const userExist = await prisma.user.findFirst({
+        where: {
+          email,
+        },
+      });
+  
+      if (!userExist) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+  
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          passwordHash: hashedPassword,
+        },
+      });
+  
+      return res.status(200).json({
+        success: true,
+        message: "Password updated successfully",
+      });
+    } catch (error) {
+      console.error('Error in newPassword:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'An error occurred while processing newPassword.',
+  
+      });
+    }
+  }
+
+
+
+
 
   // verifyOtp{
 
@@ -257,7 +345,7 @@ const userController = {
   //   const id = req.params.id;
   //   const user = await prisma.user.findFirst({
   //     where: {
-  //       id: +id,
+  //     email
   //     },
   //   });
   //   if (!user) {

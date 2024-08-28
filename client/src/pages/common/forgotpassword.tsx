@@ -16,7 +16,9 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("'http://localhost:7777/api/user/reset-password'", { email });
+      const response = await axios.put('http://localhost:7777/api/user/reset-password', { email });
+      console.log(response.data);
+      
       if (response.status === 200) {
         setSuccess("OTP sent to email!");
         setError("");

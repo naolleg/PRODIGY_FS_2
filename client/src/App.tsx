@@ -6,6 +6,8 @@ import ForgotPassword from './pages/common/forgotpassword';
 import DepartmentView from './pages/admin/department/departmentlist';
 import NewDepartmentForm from './pages/admin/department/newdept';
 import ProfilePage from './pages/common/profile';
+import OTPConfirmation from './pages/common/otpverify';
+import NewPassword from './pages/common/newpassword';
 
 
 function App() {
@@ -20,9 +22,9 @@ function App() {
     <Route path="/department" element={<DepartmentView/>}/>
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/department/new" element={<NewDepartmentForm/>}/>
-     {/*  <Route path="/getOtp" element={<OTPConfirmation />} /> 
-      <Route path="/newPassword" element={<NewPassword />}/>
-      <Route path="/department" element={<DepartmentView/>}/> */}
+    <Route path="/getOtp" element={<OTPConfirmation />} /> 
+     <Route path="/newPassword" element={<NewPassword />}/>
+      {/* <Route path="/department" element={<DepartmentView/>}/> */}
       </Routes>
     </BrowserRouter>
   );
