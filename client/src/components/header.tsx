@@ -15,11 +15,11 @@ const Navbar = () => {
                 <div className="flex justify-between items-center py-3">
                     <div className="flex items-center mt-5">
                         <span className="font-semibold text-xl text-white dark:text-white" >Employment Management System</span>
-                    </div>
+                    </div>  
                     <div className="hidden md:flex space-x-10    ">
                         <a href="/dashboard" className="text-white dark:text-white hover:text-gray-900">Home</a>
-                        <a href="/department" className="text-white dark:text-white hover:text-gray-900">dept</a>
-                        <a href="/profile" className="text-white dark:text-white hover:text-gray-900">empty</a>
+                        <a href="/department" className="text-white dark:text-white hover:text-gray-900">department</a>
+                        <a href="/profile" className="text-white dark:text-white hover:text-gray-900">profile</a>
                         <a href="#" className="text-white dark:text-white hover:text-gray-900">about        </a>
                     </div>
                     <div className="flex items-center">

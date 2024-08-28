@@ -1,4 +1,6 @@
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ForgotPasswordProps {
   // no props for now
@@ -9,25 +11,27 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const navigate = useNavigate(); // Initialize navigate
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch('http://localhost:7777/api/user/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      if (data.success) {
-        setSuccess(true);
+      const response = await axios.post("'http://localhost:7777/api/user/reset-password'", { email });
+      if (response.status === 200) {
+        setSuccess("OTP sent to email!");
+        setError("");
+        // Navigate to OTP verification page with email as state
+        navigate("/getOtp", { state: { email } });
       } else {
-        setError(data.error);
+        setError("Error sending OTP. Please try again.");
+        setSuccess("");
       }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
+    } catch (err) {
+      console.error("An error occurred during password recovery:", err);
+      setError("An error occurred. Please try again later.");
+      setSuccess("");
     }
   };
-
   return (
     <div className='bg-slate-600 h-screen w-screen p-40 flex justify-center items-center'>
       <div className="container p-12 md:p-20 w-2/5 bg-gray-200 rounded-2xl text-gray-600 shadow-2xl px-10 py-8" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -43,7 +47,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
               type="email"
               placeholder="your@email.com"
               value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           {error && <div className="text-red-500">{error}</div>}

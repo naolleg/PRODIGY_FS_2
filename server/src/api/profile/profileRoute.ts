@@ -8,5 +8,5 @@ const profileROuter = Router();
 profileROuter.get('/getProfile/:id',[isAuthUser],errorHandler(profileController.getProfile))
 profileROuter.put('/update/:id',errorHandler(profileController.editProfile))
 
-
+//
 export default profileROuter;

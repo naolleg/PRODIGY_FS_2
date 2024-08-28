@@ -6,6 +6,7 @@ import { STATUS } from "@prisma/client";
 import { SECRET } from "../../config/secrete.js";
 import { generatePassword } from "../../utils/generator.js"
 import { sendEmail } from "../../utils/emailSender.js";
+import { emit } from "process";
 
 const userController = {
   register: async (req: Request, res: Response, next: NextFunction) => {
@@ -156,7 +157,30 @@ const userController = {
       message: "password updated successfully",
       data: updateUser,
     });
-  },
+  },  getAll:async(req: Request,res: Response,next: NextFunction)=>{
+
+    try {
+        const users= await prisma.user.findMany(
+          {
+            include: {
+              employees: {
+                include: {
+                  department: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+        
+        res.status(200).json({ success: true,
+          message: "all Users",users});
+      } catch (error) {
+        throw(error);
+      }
+    },
   resetPassword: async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.email;
     if (!email) {
@@ -179,30 +203,23 @@ const userController = {
       });
     }
   
-    const newPassword = generatePassword();
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(newPassword, salt);
-  
-    const updateUser = await prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        passwordHash: hashedPassword,
-      },
-    });
-  
-    sendEmail(user.email, newPassword);
+    const newOtp = generatePassword();
+    
+  const updateUser = await prisma.user.update({
+    where: {
+          email: email,
+        },
+        data:{
+   otp:newOtp
+  }});
+  sendEmail(user.email, newOtp);
   
     return res.status(200).json({
       success: true,
-      message: "Password updated successfully",
-      data: updateUser,
+      message: "Otp send successfully",
+
     });
-  },
-  updateUserInfo:async (req: Request, res: Response, next: NextFunction) => {
-    console.log("jdh");
-    
+  },  changeStatus: async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id;
     const user = await prisma.user.findFirst({
       where: {
@@ -215,6 +232,40 @@ const userController = {
         message: "user not found",
       });
     }
+    const updateUser = await prisma.user.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        activeStatus: req.body.activeStatus,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "status updated successfully",
+      data: updateUser,
+    });
+  },
+
+  // verifyOtp{
+
+  // }
+  // updateUserInfo:async (req: Request, res: Response, next: NextFunction) => {
+  //   console.log("jdh");
+    
+  //   const id = req.params.id;
+  //   const user = await prisma.user.findFirst({
+  //     where: {
+  //       id: +id,
+  //     },
+  //   });
+  //   if (!user) {
+  //     return res.status(404).json({
+  //       success: false,
+  //       message: "user not found",
+  //     });
+  //   }
     // const updateUser = await prisma.user.update({
     //   where: {
     //     id: +id,
@@ -251,58 +302,7 @@ const userController = {
     //   message: "user info updated successfully",
     //   data: updateUser,
     // });
-  },
-  changeStatus: async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    const user = await prisma.user.findFirst({
-      where: {
-        id: +id,
-      },
-    });
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "user not found",
-      });
-    }
-    const updateUser = await prisma.user.update({
-      where: {
-        id: +id,
-      },
-      data: {
-        activeStatus: req.body.activeStatus,
-      },
-    });
+  
 
-    return res.status(200).json({
-      success: true,
-      message: "status updated successfully",
-      data: updateUser,
-    });
-  },
-  getAll:async(req: Request,res: Response,next: NextFunction)=>{
-
-    try {
-        const users= await prisma.user.findMany(
-          {
-            include: {
-              employees: {
-                include: {
-                  department: {
-                    select: {
-                      name: true,
-                    },
-                  },
-                },
-              },
-            },
-          });
-        
-        res.status(200).json({ success: true,
-          message: "all Users",users});
-      } catch (error) {
-        throw(error);
-      }
-    },
 };
 export default userController;

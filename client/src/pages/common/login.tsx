@@ -13,7 +13,13 @@ const Login = () => {
     axios.post('http://localhost:7777/api/user/login', userData)
       .then((response) => {
         // Handle successful response
-        console.log(response.data);
+        //const userID:Number=response.data.data.id;
+        const { token} = response.data;
+        localStorage.setItem("token", token);
+       
+        const {id} =response.data.data;
+        localStorage.setItem("userId", JSON.stringify(id));
+
         window.location.href = '/dashboard'; // Redirect to DepartmentView page
       })
       .catch((error) => {
