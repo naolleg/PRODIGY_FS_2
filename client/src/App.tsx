@@ -8,6 +8,7 @@ import NewDepartmentForm from './pages/admin/department/newdept';
 import ProfilePage from './pages/common/profile';
 import OTPConfirmation from './pages/common/otpverify';
 import NewPassword from './pages/common/newpassword';
+import EditDepartmentForm from './pages/admin/department/editdept';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
     <Route path="/department" element={<DepartmentView/>}/>
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/department/new" element={<NewDepartmentForm/>}/>
+    <Route path="/department/edit/:id" element={<EditDepartmentForm/>}/>
     <Route path="/getOtp" element={<OTPConfirmation />} /> 
      <Route path="/newPassword" element={<NewPassword />}/>
       {/* <Route path="/department" element={<DepartmentView/>}/> */}

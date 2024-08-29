@@ -55,7 +55,40 @@ const departmentController={
             message: 'updated department',
             data: updatedepartment
         })
-    },
+    }
+    , getsingle:async(req: Request,res: Response,next: NextFunction)=>{
+        const id = req.params.id;
+               
+        const departmentExist = await prisma.department.findFirst({where:{
+            id: +id,
+        }})
+        if(!departmentExist){
+            return res.status(404).json({
+                success: false,
+                message: "department not found"
+            })
+        }
+        try {
+            const department= await prisma.department.findFirst({
+                include:{
+                    manager:{
+                        select:{
+                            user:{
+                                select:{
+                                    firstName:true,
+                                    lastName:true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            res.status(200).json({ success: true,
+              message: "all department",department});
+          } catch (error) {
+            throw(error);
+          }
+        },
     getAll:async(req: Request,res: Response,next: NextFunction)=>{
 
         try {

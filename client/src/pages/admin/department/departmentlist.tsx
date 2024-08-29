@@ -28,8 +28,7 @@ const DepartmentView = () => {
   };
 
   const handleEdit = (id: number) => {
-    // Redirect to edit page
-    window.location.href = `/departments/${id}/edit`;
+    window.location.href = `/department/edit/${id}`;
   };
 
   return (

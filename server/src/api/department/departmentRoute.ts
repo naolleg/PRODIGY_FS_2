@@ -7,6 +7,7 @@ const departmentROuter = Router();
 
 departmentROuter.post('/register', errorHandler(departmentController.register))
 departmentROuter.get('/getAll',errorHandler(departmentController.getAll))
+departmentROuter.get('/get/:id',errorHandler(departmentController.getsingle))
 departmentROuter.put('/update/:id',errorHandler(departmentController.update))
 departmentROuter.delete('/delete/:id',errorHandler(departmentController.delete))
 
