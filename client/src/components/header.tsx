@@ -10,7 +10,7 @@ const Navbar = () => {
 
    
     return (
-        <nav className="bg-gradient-to-r from-blue-800 to-blue-700 shadow-md h-18" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <nav className="bg-gradient-to-r from-blue-800 to-blue-700 shadow-md h-24" style={{ fontFamily: 'Arial, sans-serif' }}>
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center py-3">
                     <div className="flex items-center mt-5">
@@ -20,7 +20,7 @@ const Navbar = () => {
                         <a href="/dashboard" className="text-white dark:text-white hover:text-gray-900">Home</a>
                         <a href="/department" className="text-white dark:text-white hover:text-gray-900">department</a>
                         <a href="/profile" className="text-white dark:text-white hover:text-gray-900">profile</a>
-                        <a href="#" className="text-white dark:text-white hover:text-gray-900">about        </a>
+                        <a href="/analysis"  className="text-white dark:text-white hover:text-gray-900">analysis        </a>
                     </div>
                     <div className="flex items-center">
                     <button

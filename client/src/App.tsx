@@ -9,6 +9,7 @@ import ProfilePage from './pages/common/profile';
 import OTPConfirmation from './pages/common/otpverify';
 import NewPassword from './pages/common/newpassword';
 import EditDepartmentForm from './pages/admin/department/editdept';
+import BarChartUserAnalysis from './pages/admin/department/charts';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     <Route path="/department/edit/:id" element={<EditDepartmentForm/>}/>
     <Route path="/getOtp" element={<OTPConfirmation />} /> 
      <Route path="/newPassword" element={<NewPassword />}/>
+     <Route path="/analysis" element={<BarChartUserAnalysis/>}/>
       {/* <Route path="/department" element={<DepartmentView/>}/> */}
       </Routes>
     </BrowserRouter>

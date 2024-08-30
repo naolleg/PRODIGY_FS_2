@@ -164,7 +164,8 @@ const userController = {
           {
             include: {
               employees: {
-                include: {
+                select: {
+                  gender:true,
                   department: {
                     select: {
                       name: true,
