@@ -14,9 +14,13 @@ const Login = () => {
       .then((response) => {
         // Handle successful response
         //const userID:Number=response.data.data.id;
+        const {role} = response.data.data;
         const { token} = response.data;
+        console.log(role);
+        console.log(token);
+        
         localStorage.setItem("token", token);
-       
+        localStorage.setItem("Role", role);
         const {id} =response.data.data;
         localStorage.setItem("userId", JSON.stringify(id));
 

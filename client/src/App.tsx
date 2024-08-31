@@ -18,28 +18,28 @@ function App() {
       <Routes>
        {/* <Route path="/department/new" element={<NewDepartmentForm/>}/>*/}
      <Route path="/dashboard/newEmployee" element={
-      <ProtectedRoute role="admin"> <Register/>
+      <ProtectedRoute role='ADMIN'> <Register/>
       </ProtectedRoute>} />  
      <Route path="/dashboard"  element={ 
-     <ProtectedRoute role="admin"> <AdminDashboard />
+     <ProtectedRoute role='ADMIN'> <AdminDashboard />
      </ProtectedRoute>
   }/>
      <Route path="/" element={<Login />} />
     <Route path="/forgetPassword" element={<ForgotPassword />} />
     <Route path="/department" element={
-      <ProtectedRoute role="admin"> <DepartmentView/>
+      <ProtectedRoute role='ADMIN'> <DepartmentView/>
       </ProtectedRoute>}/>
     <Route path="/profile" element={<ProfilePage />} />
     <Route path="/department/new" element={
-      <ProtectedRoute role="admin"> <NewDepartmentForm/>
+      <ProtectedRoute role='ADMIN'> <NewDepartmentForm/>
       </ProtectedRoute>}/>
     <Route path="/department/edit/:id" element={
-      <ProtectedRoute role="admin"> <EditDepartmentForm />
+      <ProtectedRoute role='ADMIN'> <EditDepartmentForm />
       </ProtectedRoute>}/>
     <Route path="/getOtp" element={<OTPConfirmation />} /> 
      <Route path="/newPassword" element={<NewPassword />}/>
      <Route path="/analysis" element={
-      <ProtectedRoute role="admin"> <BarChartUserAnalysis/>
+      <ProtectedRoute role='ADMIN'> <BarChartUserAnalysis/>
       </ProtectedRoute>}/>
       {/* <Route path="/department" element={<DepartmentView/>}/> */}
       </Routes>
