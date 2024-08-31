@@ -10,24 +10,37 @@ import OTPConfirmation from './pages/common/otpverify';
 import NewPassword from './pages/common/newpassword';
 import EditDepartmentForm from './pages/admin/department/editdept';
 import BarChartUserAnalysis from './pages/admin/department/charts';
-
+import ProtectedRoute from '../utils/protectedRoute'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
        {/* <Route path="/department/new" element={<NewDepartmentForm/>}/>*/}
-     <Route path="/dashboard/newEmployee" element={<Register/>} />  
-     <Route path="/dashboard" element={<AdminDashboard />} />
+     <Route path="/dashboard/newEmployee" element={
+      <ProtectedRoute role="admin"> <Register/>
+      </ProtectedRoute>} />  
+     <Route path="/dashboard"  element={ 
+     <ProtectedRoute role="admin"> <AdminDashboard />
+     </ProtectedRoute>
+  }/>
      <Route path="/" element={<Login />} />
     <Route path="/forgetPassword" element={<ForgotPassword />} />
-    <Route path="/department" element={<DepartmentView/>}/>
+    <Route path="/department" element={
+      <ProtectedRoute role="admin"> <DepartmentView/>
+      </ProtectedRoute>}/>
     <Route path="/profile" element={<ProfilePage />} />
-    <Route path="/department/new" element={<NewDepartmentForm/>}/>
-    <Route path="/department/edit/:id" element={<EditDepartmentForm/>}/>
+    <Route path="/department/new" element={
+      <ProtectedRoute role="admin"> <NewDepartmentForm/>
+      </ProtectedRoute>}/>
+    <Route path="/department/edit/:id" element={
+      <ProtectedRoute role="admin"> <EditDepartmentForm />
+      </ProtectedRoute>}/>
     <Route path="/getOtp" element={<OTPConfirmation />} /> 
      <Route path="/newPassword" element={<NewPassword />}/>
-     <Route path="/analysis" element={<BarChartUserAnalysis/>}/>
+     <Route path="/analysis" element={
+      <ProtectedRoute role="admin"> <BarChartUserAnalysis/>
+      </ProtectedRoute>}/>
       {/* <Route path="/department" element={<DepartmentView/>}/> */}
       </Routes>
     </BrowserRouter>

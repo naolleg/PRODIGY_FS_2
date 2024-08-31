@@ -72,7 +72,7 @@ const OTPConfirmation = () => {
           </button>
         </form>
         <p className="text-sm text-gray-600 mt-4 text-center">
-          Didn't receive the OTP? <a href="/resend-otp" className="text-blue-500 hover:text-blue-700">Resend OTP</a>
+          Didn't receive the OTP? <a href="/forgetPassword" className="text-blue-500 hover:text-blue-700">Resend OTP</a>
         </p>
       </div>
     </div>

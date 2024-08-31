@@ -1,8 +1,9 @@
 import { Router } from "express";
 import employeeController from "./employeeController.js";
 import errorHandler from "../../../midleware/error.js";
+import { isAdmin } from "../../../midleware/auth.js";
 const employeeRouter = Router();
 
-employeeRouter.get('/getAll',errorHandler(employeeController.getAll));
+employeeRouter.get('/getAll',[isAdmin],errorHandler(employeeController.getAll));
 
 export default employeeRouter;

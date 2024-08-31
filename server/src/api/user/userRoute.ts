@@ -1,10 +1,11 @@
 import { Router } from "express";
 import userController from "./userController.js";
 import errorHandler from "../../midleware/error.js";
+import { isAdmin } from "../../midleware/auth.js";
 const userRouter = Router();
 
-userRouter.post('/register',errorHandler(userController.register));
-userRouter.get('/getAll',errorHandler(userController.getAll));
+userRouter.post('/register',[isAdmin],errorHandler(userController.register));
+userRouter.get('/getAll',[isAdmin],errorHandler(userController.getAll));
 userRouter.post('/login',errorHandler(userController.login));
 userRouter.put('/change-password/:id',errorHandler(userController.changePassword));
 userRouter.put('/reset-password',errorHandler(userController.resetPassword));
