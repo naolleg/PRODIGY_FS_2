@@ -19,6 +19,6 @@ app.get('/',(req,res,next)=>{
    return res.send('server is working');
 });
 
-app.listen(parseInt(PORT!), '0.0.0.0', () => {
+app.listen(parseInt(PORT!), '0.0.0.1', () => {
         console.log(`Server listening on ${PORT}`);
       });
